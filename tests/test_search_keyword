@@ -1,1 +1,55 @@
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+"""
+=================================
+created on July 2th,2025
+实现百度网站的Web UI自动化测试
+=================================
+"""
+
+
+import pytest
+import unittest
+import time
+from selenium import webdriver
+from XTestRunner import HTMLTestRunner
+from test_baidu_ui.pages.search_page import BaiduPage
+from test_baidu_ui.tests.common import log
+
+
+def test_search(driver):
+    """百度首页-搜索"""
+    url = 'https://www.baidu.com/'
+    page = BaiduPage(driver)
+
+    page.open(url)
+
+    page.search_input.send_keys("page object")
+    page.search_button.click()
+    driver.implicitly_wait(2)
+
+    assert 'object' in driver.current_url
+
+def test_change(driver):
+    """百度首页-换一换"""
+    url = 'https://www.baidu.com/'
+
+    page = BaiduPage(driver)
+    page.open(url)
+
+    page.change_button.click()
+    driver.implicitly_wait(1)
+
+    assert '10' in page.change10thtitle.text
+
+    driver.refresh()
+    driver.implicitly_wait(1)
+
+
+if __name__ == '__main__':
+    current = time.strftime("%Y%m%d_%H%M%S_",time.localtime(time.time()))
+
+    html_report = './test_report/' + current + 'report.html'
+    pytest.main(["-q","--html",html_report])
+
 
